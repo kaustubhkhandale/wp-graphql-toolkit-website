@@ -1,0 +1,20 @@
+import type { Metadata } from "next";
+import { Article, ContentPage, PageHero } from "@/components/site/ContentPage";
+
+export const metadata: Metadata = { title: "Privacy Policy | WP GraphQL Toolkit", description: "Privacy practices for WP GraphQL Toolkit." };
+
+export default function PrivacyPage() {
+  return <ContentPage><PageHero eyebrow="Legal" title="Privacy Policy" intro="How WP GraphQL Toolkit handles information across the website, WordPress plugin, support, and any future hosted services. Effective June 10, 2026." />
+    <Article notice="Launch checklist: this policy must be reviewed by qualified legal counsel and updated to match the analytics, payments, support, licensing, hosting, and subprocessors actually used before publication." sections={[
+      { title: "Overview", body: ["WP GraphQL Toolkit is designed to help WordPress developers inspect schemas and build GraphQL operations. The plugin should process schema and query information within the connected WordPress environment unless a user deliberately uses a hosted feature described at the time of use."] },
+      { title: "Information We May Collect", bullets: ["Website request data such as IP address, browser type, pages viewed, and timestamps when collected by hosting or security services.", "Account, license, billing, and transaction information if paid services are offered.", "Support messages, diagnostic details, and files users choose to provide.", "Product telemetry only when clearly disclosed and where required, enabled with appropriate consent.", "Information required to prevent abuse, secure services, and comply with law."] },
+      { title: "WordPress And GraphQL Data", body: ["Your WordPress content, GraphQL schema, query responses, credentials, and authentication tokens remain under your control. Do not submit sensitive WordPress data to support or hosted services unless necessary and explicitly requested through a secure channel."], bullets: ["Use least-privilege credentials.", "Avoid exposing private fields through the public GraphQL schema.", "Review generated queries before deploying them.", "Protect production backups and diagnostic exports."] },
+      { title: "How Information Is Used", bullets: ["Provide, secure, maintain, and improve the product.", "Process purchases, licenses, and updates when those services are available.", "Respond to support and security reports.", "Understand aggregate product usage where lawful and disclosed.", "Meet legal obligations and enforce applicable terms."] },
+      { title: "Sharing And Subprocessors", body: ["Information may be shared with service providers needed to operate the website or product, such as hosting, payment, email, analytics, error monitoring, and support providers. A current subprocessor list should be published before those services are enabled. We do not sell personal information."] },
+      { title: "Retention And Security", body: ["Information is retained only as long as reasonably needed for the purposes described, contractual obligations, security, and legal requirements. No system is perfectly secure; users are responsible for securing their WordPress sites, credentials, endpoints, and exported code."] },
+      { title: "Your Choices And Rights", body: ["Depending on location, users may have rights to access, correct, delete, restrict, object to, or export personal information. Requests should use the verified contact method published on the Contact page once configured."] },
+      { title: "Children And International Use", body: ["The product is intended for professional developers and is not directed to children. Information may be processed in countries where providers operate, subject to appropriate safeguards where required."] },
+      { title: "Changes To This Policy", body: ["Material changes will be reflected by updating the effective date and, when appropriate, providing additional notice. Continued use after a policy change is subject to applicable law."] },
+    ]} />
+  </ContentPage>;
+}

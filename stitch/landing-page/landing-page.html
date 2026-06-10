@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>WP GraphQL Toolkit | Build Headless WordPress Faster</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Using Geist-like font via sans-serif fallback as it's a premium font, or system font stack for technical feel -->
+<style>
+        :root {
+            --font-geist: 'Geist', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A0A0A;
+            color: #e5e2e1;
+            scroll-behavior: smooth;
+        }
+        .font-title-md, .font-headline-lg, .font-display-lg, .font-headline-lg-mobile {
+            font-family: var(--font-geist);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(23, 23, 23, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid #262626;
+        }
+        .gradient-text {
+            background: linear-gradient(to bottom right, #c0c1ff, #8083ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-glow {
+            position: absolute;
+            top: -10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 60%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(10, 10, 10, 0) 70%);
+            z-index: -1;
+        }
+        .step-line::after {
+            content: '';
+            position: absolute;
+            top: 1.5rem;
+            left: 2rem;
+            right: -1rem;
+            height: 2px;
+            background: #262626;
+            z-index: 0;
+        }
+        .step-line:last-child::after {
+            display: none;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed": "#e1e0ff",
+                    "on-surface": "#e5e2e1",
+                    "surface-container-lowest": "#0e0e0e",
+                    "surface-container": "#201f1f",
+                    "error-container": "#93000a",
+                    "on-primary-container": "#0d0096",
+                    "on-primary-fixed-variant": "#2f2ebe",
+                    "surface-variant": "#353534",
+                    "on-error-container": "#ffdad6",
+                    "on-tertiary": "#4f2500",
+                    "inverse-primary": "#494bd6",
+                    "outline": "#908fa0",
+                    "surface-container-highest": "#353534",
+                    "on-error": "#690005",
+                    "on-secondary-fixed": "#001a42",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "secondary-fixed": "#d8e2ff",
+                    "surface": "#131313",
+                    "secondary-container": "#0566d9",
+                    "inverse-on-surface": "#313030",
+                    "tertiary-fixed": "#ffdcc5",
+                    "secondary": "#adc6ff",
+                    "surface-tint": "#c0c1ff",
+                    "on-tertiary-container": "#452000",
+                    "tertiary-container": "#d97721",
+                    "inverse-surface": "#e5e2e1",
+                    "surface-container-low": "#1c1b1b",
+                    "on-secondary-container": "#e6ecff",
+                    "on-secondary": "#002e6a",
+                    "surface-bright": "#3a3939",
+                    "primary-fixed-dim": "#c0c1ff",
+                    "on-surface-variant": "#c7c4d7",
+                    "on-background": "#e5e2e1",
+                    "on-tertiary-fixed": "#301400",
+                    "outline-variant": "#464554",
+                    "on-secondary-fixed-variant": "#004395",
+                    "on-primary": "#1000a9",
+                    "surface-dim": "#131313",
+                    "tertiary-fixed-dim": "#ffb783",
+                    "primary": "#c0c1ff",
+                    "background": "#131313",
+                    "on-primary-fixed": "#07006c",
+                    "error": "#ffb4ab",
+                    "on-tertiary-fixed-variant": "#703700",
+                    "tertiary": "#ffb783",
+                    "surface-container-high": "#2a2a2a",
+                    "primary-container": "#8083ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "margin-page": "48px",
+                    "gutter": "24px",
+                    "xs": "4px",
+                    "xl": "40px",
+                    "sm": "8px",
+                    "md": "16px",
+                    "lg": "24px"
+            },
+            "fontFamily": {
+                    "label-xs": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "headline-lg-mobile": ["Geist"],
+                    "display-lg": ["Geist"],
+                    "title-md": ["Geist"],
+                    "headline-lg": ["Geist"],
+                    "body-md": ["Inter"],
+                    "code-sm": ["JetBrains Mono"]
+            },
+            "fontSize": {
+                    "label-xs": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "code-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background text-on-surface">
+<!-- Top Navigation -->
+<nav class="flex justify-between items-center w-full px-lg h-16 sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-outline-variant">
+<div class="flex items-center gap-md">
+<span class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-on-surface">WP GraphQL Toolkit</span>
+</div>
+<div class="hidden md:flex items-center gap-lg">
+<a class="text-primary font-bold border-b-2 border-primary py-1" href="#">Home</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors" href="#features">Features</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors" href="#pricing">Pricing</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors" href="#docs">Docs</a>
+<button class="bg-primary text-on-primary px-md py-sm rounded-lg font-label-xs hover:opacity-90 transition-opacity">Get Started Free</button>
+</div>
+<div class="md:hidden">
+<span class="material-symbols-outlined">menu</span>
+</div>
+</nav>
+<!-- Hero Section -->
+<header class="relative pt-xl pb-24 px-lg flex flex-col items-center text-center overflow-hidden">
+<div class="hero-glow"></div>
+<div class="max-w-4xl space-y-md">
+<h1 class="font-display-lg text-display-lg leading-tight tracking-tight">
+                Build WPGraphQL Queries Visually.<br/>
+<span class="gradient-text">Ship Headless WordPress Faster.</span>
+</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl mx-auto">
+                Generate, preview, save, and export production-ready WPGraphQL queries without manually writing GraphQL code. The ultimate workspace for modern WordPress developers.
+            </p>
+<div class="flex flex-wrap justify-center gap-md pt-md">
+<button class="bg-primary text-on-primary px-lg py-md rounded-lg font-title-md hover:scale-[1.02] transition-transform shadow-xl shadow-primary/20">
+                    Get Started Free
+                </button>
+<button class="border border-outline-variant hover:bg-surface-container transition-colors px-lg py-md rounded-lg font-title-md flex items-center gap-sm">
+<span class="material-symbols-outlined">play_circle</span>
+                    View Live Demo
+                </button>
+</div>
+</div>
+<!-- Dashboard Mockup -->
+<div class="mt-xl relative w-full max-w-6xl mx-auto">
+<div class="glass-panel rounded-xl overflow-hidden shadow-2xl border border-outline-variant/30">
+<div class="bg-surface-container-high h-10 flex items-center px-md gap-sm border-b border-outline-variant/30">
+<div class="flex gap-1.5">
+<div class="w-3 h-3 rounded-full bg-red-500/50"></div>
+<div class="w-3 h-3 rounded-full bg-yellow-500/50"></div>
+<div class="w-3 h-3 rounded-full bg-green-500/50"></div>
+</div>
+<div class="mx-auto bg-surface/50 px-lg py-0.5 rounded text-xs text-on-surface-variant font-mono">localhost:3000/wp-admin/toolkit</div>
+</div>
+<div class="aspect-[16/9] relative bg-[#0A0A0A]">
+<img alt="Dashboard UI" class="w-full h-full object-cover" data-alt="A cinematic, high-fidelity user interface screen shot of a dark mode developer application. The interface displays a complex GraphQL schema explorer on the left, a visual query builder in the center, and a code editor on the right with vibrant syntax highlighting in indigo and violet. The overall aesthetic is sleek, minimalist, and professional, echoing high-end developer tools with subtle glassmorphism effects." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_ICdBlRrLN377I8_zzGG6naJRE3MquG_s2zKmSapHIOu2ck94kGQUdt-w7htfYD4bkaiSUYTLdSr3S3Jf4QmEITXIRUzTyFebofkjkecBzog4tm4o7au8SM_lYUFyyEe8zAp0zrrC5iOOJcVdSZpXKWN6yKarPxkDOA0OgBfu97tAHnk1YcFitZbFu1GQd2vpKLjrbkLKyzDLNMWryuEvIVI99aRqc08Ii0lFlRmGhwRyXdpvB4lWdJH6bbwUXol0HBTXs3VtLOw"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Problem Statement -->
+<section class="py-xl px-lg bg-surface-container-lowest">
+<div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-xl items-center">
+<div class="space-y-md">
+<h2 class="font-headline-lg text-headline-lg">Stop Writing The Same GraphQL Queries Again And Again</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                    Manual query building is error-prone and time-consuming. Stop context-switching between GraphiQL and your IDE just to find a single field ID.
+                </p>
+<ul class="space-y-sm">
+<li class="flex items-center gap-sm text-on-surface"><span class="material-symbols-outlined text-error">close</span> No more schema guessing games</li>
+<li class="flex items-center gap-sm text-on-surface"><span class="material-symbols-outlined text-error">close</span> No more syntax errors in production</li>
+<li class="flex items-center gap-sm text-on-surface"><span class="material-symbols-outlined text-error">close</span> No more messy query documentation</li>
+</ul>
+</div>
+<div class="grid grid-cols-1 gap-md">
+<div class="glass-panel p-md rounded-xl border-l-4 border-primary">
+<h4 class="font-label-xs text-primary mb-sm">WITH TOOLKIT</h4>
+<p class="font-body-sm text-body-sm mb-md">Select fields via checkboxes, see live previews, and export with one click.</p>
+<div class="bg-surface-container rounded p-sm flex items-center justify-between">
+<span class="font-code-sm text-code-sm text-secondary">getPosts(first: 10) { ... }</span>
+<span class="material-symbols-outlined text-primary">check_circle</span>
+</div>
+</div>
+<div class="glass-panel p-md rounded-xl opacity-50 grayscale">
+<h4 class="font-label-xs text-on-surface-variant mb-sm">WITHOUT TOOLKIT</h4>
+<p class="font-body-sm text-body-sm mb-md">Wrestle with nested fragments and accidental circular dependencies.</p>
+<div class="bg-surface-container rounded p-sm flex items-center justify-between">
+<span class="font-code-sm text-code-sm text-error">query { nodes { id ... } }</span>
+<span class="material-symbols-outlined">warning</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Features Grid -->
+<section class="py-xl px-lg" id="features">
+<div class="max-w-6xl mx-auto text-center mb-xl">
+<h2 class="font-headline-lg text-headline-lg mb-md">Everything you need to master WPGraphQL</h2>
+</div>
+<div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-lg">
+<!-- Card 1 -->
+<div class="glass-panel p-lg rounded-xl hover:border-primary/50 transition-colors group">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-md group-hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="terminal">terminal</span>
+</div>
+<h3 class="font-title-md text-title-md mb-sm">Visual Query Builder</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Point and click to build complex queries. We handle the nesting and fragments for you.</p>
+</div>
+<!-- Card 2 -->
+<div class="glass-panel p-lg rounded-xl hover:border-primary/50 transition-colors group">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-md group-hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="description">description</span>
+</div>
+<h3 class="font-title-md text-title-md mb-sm">Prebuilt Templates</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Start from battle-tested query patterns for posts, pages, and custom post types.</p>
+</div>
+<!-- Card 3 -->
+<div class="glass-panel p-lg rounded-xl hover:border-primary/50 transition-colors group">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-md group-hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="account_tree">account_tree</span>
+</div>
+<h3 class="font-title-md text-title-md mb-sm">Schema Explorer</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Browse your entire WordPress schema without leaving the toolkit interface.</p>
+</div>
+<!-- Card 4 -->
+<div class="glass-panel p-lg rounded-xl hover:border-primary/50 transition-colors group">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-md group-hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="play_circle">play_circle</span>
+</div>
+<h3 class="font-title-md text-title-md mb-sm">GraphQL Playground</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Test your queries instantly with live WordPress data to verify results.</p>
+</div>
+<!-- Card 5 -->
+<div class="glass-panel p-lg rounded-xl hover:border-primary/50 transition-colors group">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-md group-hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="bookmark">bookmark</span>
+</div>
+<h3 class="font-title-md text-title-md mb-sm">Saved Queries</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Organize and store your most-used queries in custom folders for team sharing.</p>
+</div>
+<!-- Card 6 -->
+<div class="glass-panel p-lg rounded-xl hover:border-primary/50 transition-colors group">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-md group-hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="output">output</span>
+</div>
+<h3 class="font-title-md text-title-md mb-sm">Export Center</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Export to JavaScript, TypeScript, or direct Apollo/Relay fragments.</p>
+</div>
+</div>
+</section>
+<!-- Product Showcase -->
+<section class="py-xl bg-surface-container-low overflow-hidden">
+<div class="max-w-6xl mx-auto px-lg">
+<div class="flex flex-col gap-24">
+<!-- Row 1 -->
+<div class="grid md:grid-cols-2 gap-xl items-center">
+<div class="order-2 md:order-1">
+<div class="glass-panel rounded-xl overflow-hidden border border-outline-variant">
+<img alt="Query Builder Interface" class="w-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDy5aaeoWzt5eMT9y61QWRWhJocZ_4sK0Obp30nDMEqTphSdCQ5J5yaBlu7L0aCcyZxD9Mx9P4etBgfXoMGxGQEZn6Dh156sM9alOvIz6COdvJD7nG80qEa4xa8bcAe9rRZHuFfOohe8BkS6UXSuOXSj0ZcSFRO9abQZDrV-SPKg0kvXQIal0FYZ-t80LYuY7ygo0Ilo71IM-S8lgmpFxmhljowBaZyljB1eAyqGeDIuFT9smTVr8MTu0sqYo-LphLAMvNbDAcJoWY"/>
+</div>
+</div>
+<div class="order-1 md:order-2 space-y-md">
+<span class="font-label-xs text-primary px-sm py-1 bg-primary/10 rounded">VISUAL BUILDER</span>
+<h2 class="font-headline-lg text-headline-lg">Building queries shouldn't require a map.</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Our visual builder displays your schema in a clean, hierarchical view. Select what you need, and watch the query generate in real-time on the right.</p>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="grid md:grid-cols-2 gap-xl items-center">
+<div class="space-y-md">
+<span class="font-label-xs text-tertiary px-sm py-1 bg-tertiary/10 rounded">SCHEMA EXPLORER</span>
+<h2 class="font-headline-lg text-headline-lg">A developer-first view of your WP data.</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Browse ACF fields, Woo Commerce products, and custom post types with intelligent tooltips and type definitions built right into the sidebar.</p>
+</div>
+<div>
+<div class="glass-panel rounded-xl overflow-hidden border border-outline-variant">
+<img alt="Schema Explorer" class="w-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbUKTz_oTEX6QoERAnenzlRpov4aFmFf4DgYzC_8j4PLsDvoIhRZkSHWrnUUz7Lp_lE2MVUFbokfVmc_qgFiyRZoxWhDJ3fP5EsAymGew2H36YRadCBaBzd3sbla6_dNaKGWE76wOAD9_frwW_elf2ygvzc4eRzyJZFHMBJlk1Tq8EiRArEDSmgCIZ9dZkAii4JR_Ajtu-70LKN6a8gO37l_w-CiHnOP-eqi79bo8AbHeMe1Yqhzps05yJ5EhfoJRLRb0aSrLmdjU"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- How It Works -->
+<section class="py-xl px-lg">
+<div class="max-w-6xl mx-auto text-center mb-xl">
+<h2 class="font-headline-lg text-headline-lg">From Idea to Production in Seconds</h2>
+</div>
+<div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-lg relative">
+<div class="flex-1 flex flex-col items-center text-center space-y-sm step-line relative group">
+<div class="w-12 h-12 rounded-full bg-surface-container border border-outline-variant flex items-center justify-center font-title-md z-10 group-hover:border-primary transition-colors">1</div>
+<h4 class="font-title-md text-title-md">Choose Template</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Start from a blank query or a curated base.</p>
+</div>
+<div class="flex-1 flex flex-col items-center text-center space-y-sm step-line relative group">
+<div class="w-12 h-12 rounded-full bg-surface-container border border-outline-variant flex items-center justify-center font-title-md z-10 group-hover:border-primary transition-colors">2</div>
+<h4 class="font-title-md text-title-md">Select Fields</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Check boxes for the data you need.</p>
+</div>
+<div class="flex-1 flex flex-col items-center text-center space-y-sm step-line relative group">
+<div class="w-12 h-12 rounded-full bg-surface-container border border-outline-variant flex items-center justify-center font-title-md z-10 group-hover:border-primary transition-colors">3</div>
+<h4 class="font-title-md text-title-md">Generate</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Optimized GraphQL is created instantly.</p>
+</div>
+<div class="flex-1 flex flex-col items-center text-center space-y-sm step-line relative group">
+<div class="w-12 h-12 rounded-full bg-surface-container border border-outline-variant flex items-center justify-center font-title-md z-10 group-hover:border-primary transition-colors">4</div>
+<h4 class="font-title-md text-title-md">Preview</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Verify the output with live data.</p>
+</div>
+<div class="flex-1 flex flex-col items-center text-center space-y-sm relative group">
+<div class="w-12 h-12 rounded-full bg-surface-container border border-outline-variant flex items-center justify-center font-title-md z-10 group-hover:border-primary transition-colors">5</div>
+<h4 class="font-title-md text-title-md">Export</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Paste into your Next.js or Nuxt app.</p>
+</div>
+</div>
+</section>
+<!-- Integration Flow -->
+<section class="py-xl bg-[#080808] border-y border-outline-variant/30">
+<div class="max-w-6xl mx-auto px-lg text-center">
+<h2 class="font-headline-lg text-headline-lg mb-xl">Seamless End-to-End Workflow</h2>
+<div class="flex flex-col md:flex-row items-center justify-center gap-md">
+<div class="px-md py-sm bg-surface-container rounded-lg border border-outline-variant font-code-sm">WordPress</div>
+<span class="material-symbols-outlined text-on-surface-variant">arrow_forward</span>
+<div class="px-md py-sm bg-surface-container rounded-lg border border-outline-variant font-code-sm">WPGraphQL</div>
+<span class="material-symbols-outlined text-on-surface-variant">arrow_forward</span>
+<div class="px-lg py-md bg-primary/20 text-primary border-2 border-primary rounded-xl font-bold">WP GraphQL Toolkit</div>
+<span class="material-symbols-outlined text-on-surface-variant">arrow_forward</span>
+<div class="px-md py-sm bg-surface-container rounded-lg border border-outline-variant font-code-sm">Frontend (Next.js/Remix)</div>
+</div>
+</div>
+</section>
+<!-- Pricing -->
+<section class="py-xl px-lg" id="pricing">
+<div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-xl">
+<!-- Free Tier -->
+<div class="glass-panel p-xl rounded-2xl border border-outline-variant flex flex-col">
+<div class="mb-lg">
+<h3 class="font-headline-lg text-headline-lg mb-sm">Free</h3>
+<div class="flex items-baseline gap-1">
+<span class="text-4xl font-bold text-on-surface">$0</span>
+<span class="text-on-surface-variant">/forever</span>
+</div>
+</div>
+<ul class="space-y-md mb-xl flex-1">
+<li class="flex items-center gap-md"><span class="material-symbols-outlined text-primary">check</span> Visual Query Builder</li>
+<li class="flex items-center gap-md"><span class="material-symbols-outlined text-primary">check</span> Full Schema Explorer</li>
+<li class="flex items-center gap-md"><span class="material-symbols-outlined text-primary">check</span> Basic Code Export</li>
+<li class="flex items-center gap-md"><span class="material-symbols-outlined text-primary">check</span> Standard Templates</li>
+</ul>
+<button class="w-full border border-outline-variant hover:bg-surface-container transition-colors py-md rounded-lg font-title-md">Start Building</button>
+</div>
+<!-- Pro Tier -->
+<div class="relative group">
+<div class="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+<div class="relative glass-panel p-xl rounded-2xl border-2 border-primary flex flex-col h-full bg-surface-container-lowest">
+<div class="mb-lg">
+<div class="flex justify-between items-center mb-sm">
+<h3 class="font-headline-lg text-headline-lg">Pro</h3>
+<span class="bg-primary text-on-primary px-sm py-1 rounded-full text-xs font-bold uppercase tracking-wider">Most Popular</span>
+</div>
+<div class="flex items-baseline gap-1">
+<span class="text-4xl font-bold text-on-surface">$19</span>
+<span class="text-on-surface-variant">/mo</span>
+</div>
+</div>
+<ul class="space-y-md mb-xl flex-1">
+<li class="flex items-center gap-md"><span class="material-symbols-outlined text-primary">check</span> Everything in Free</li>
+<li class="flex items-center gap-md font-bold"><span class="material-symbols-outlined text-primary">bolt</span> AI-Powered Query Generator</li>
+<li class="flex items-center gap-md"><span class="material-symbols-outlined text-primary">check</span> Advanced ACF &amp; WPML Support</li>
+<li class="flex items-center gap-md"><span class="material-symbols-outlined text-primary">check</span> Shared Team Query Libraries</li>
+<li class="flex items-center gap-md"><span class="material-symbols-outlined text-primary">check</span> White-labeled Documentation</li>
+</ul>
+<button class="w-full bg-primary text-on-primary py-md rounded-lg font-title-md shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform">Get Pro Access</button>
+</div>
+</div>
+</div>
+</section>
+<!-- FAQ -->
+<section class="py-xl px-lg bg-surface-container-lowest">
+<div class="max-w-3xl mx-auto">
+<h2 class="font-headline-lg text-headline-lg text-center mb-xl">Developer Questions</h2>
+<div class="space-y-md">
+<details class="group glass-panel rounded-xl overflow-hidden" open="">
+<summary class="flex justify-between items-center p-lg cursor-pointer list-none font-title-md">
+                        Does this support custom ACF fields?
+                        <span class="material-symbols-outlined group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<div class="p-lg pt-0 text-on-surface-variant border-t border-outline-variant/10">
+                        Absolutely. If the fields are exposed to WPGraphQL (via the ACF GraphQL extension), Toolkit will automatically detect them, parse their types, and allow you to build queries for them visually.
+                    </div>
+</details>
+<details class="group glass-panel rounded-xl overflow-hidden">
+<summary class="flex justify-between items-center p-lg cursor-pointer list-none font-title-md">
+                        Is the code exported production-ready?
+                        <span class="material-symbols-outlined group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<div class="p-lg pt-0 text-on-surface-variant border-t border-outline-variant/10">
+                        Yes. We use standard GraphQL syntax and can export directly to .graphql files or string templates for use in Apollo, Relay, or native fetch requests.
+                    </div>
+</details>
+<details class="group glass-panel rounded-xl overflow-hidden">
+<summary class="flex justify-between items-center p-lg cursor-pointer list-none font-title-md">
+                        Does it work with multisite?
+                        <span class="material-symbols-outlined group-open:rotate-180 transition-transform">expand_more</span>
+</summary>
+<div class="p-lg pt-0 text-on-surface-variant border-t border-outline-variant/10">
+                        Yes, WP GraphQL Toolkit is fully compatible with WordPress Multisite installations. You can manage queries across your entire network.
+                    </div>
+</details>
+</div>
+</div>
+</section>
+<!-- Final CTA -->
+<section class="py-xl px-lg text-center relative overflow-hidden">
+<div class="absolute inset-0 z-0">
+
+</div>
+<div class="max-w-4xl mx-auto relative z-10 bg-background/50 backdrop-blur-md p-xl rounded-3xl border border-outline-variant shadow-2xl">
+<h2 class="font-display-lg text-display-lg mb-md">Build Headless WordPress Projects Faster</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-xl max-w-xl mx-auto">Join 5,000+ developers who have reclaimed their time and sanity by ditching manual query writing.</p>
+<div class="flex flex-col sm:flex-row justify-center gap-md">
+<button class="bg-primary text-on-primary px-xl py-md rounded-lg font-title-md hover:scale-105 transition-transform shadow-xl shadow-primary/20">Get Started Free</button>
+<button class="border border-outline-variant hover:bg-surface-container px-xl py-md rounded-lg font-title-md transition-colors">Documentation</button>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="py-xl px-lg border-t border-outline-variant bg-surface-container-lowest">
+<div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-xl">
+<div class="col-span-2 md:col-span-1 space-y-md">
+<span class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-on-surface">WP GraphQL Toolkit</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Empowering developers to build the future of headless WordPress.</p>
+</div>
+<div class="space-y-md">
+<h4 class="font-label-xs text-on-surface font-bold uppercase">Product</h4>
+<ul class="space-y-sm text-on-surface-variant font-body-sm">
+<li><a class="hover:text-primary" href="#">Features</a></li>
+<li><a class="hover:text-primary" href="#">Integrations</a></li>
+<li><a class="hover:text-primary" href="#">Templates</a></li>
+<li><a class="hover:text-primary" href="#">Pricing</a></li>
+</ul>
+</div>
+<div class="space-y-md">
+<h4 class="font-label-xs text-on-surface font-bold uppercase">Support</h4>
+<ul class="space-y-sm text-on-surface-variant font-body-sm">
+<li><a class="hover:text-primary" href="#">Documentation</a></li>
+<li><a class="hover:text-primary" href="#">API Status</a></li>
+<li><a class="hover:text-primary" href="#">Contact</a></li>
+<li><a class="hover:text-primary" href="#">Changelog</a></li>
+</ul>
+</div>
+<div class="space-y-md">
+<h4 class="font-label-xs text-on-surface font-bold uppercase">Legal</h4>
+<ul class="space-y-sm text-on-surface-variant font-body-sm">
+<li><a class="hover:text-primary" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary" href="#">Terms of Service</a></li>
+</ul>
+</div>
+</div>
+<div class="max-w-6xl mx-auto mt-xl pt-lg border-t border-outline-variant/30 flex justify-between items-center text-on-surface-variant font-body-sm">
+<p>© 2024 WP GraphQL Toolkit. All rights reserved.</p>
+<p>Powered by HeadlessWP GraphQL Toolkit</p>
+</div>
+</footer>
+<script>
+        // Simple scroll reveal or micro-interactions could be added here
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('opacity-100', 'translate-y-0');
+                        entry.target.classList.remove('opacity-0', 'translate-y-10');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.glass-panel').forEach(el => {
+                el.classList.add('transition-all', 'duration-700', 'opacity-100'); // Default to showing for now
+            });
+        });
+    </script>
+</body></html>
