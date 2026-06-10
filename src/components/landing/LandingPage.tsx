@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "./LandingPage.module.css";
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 const features = [
   ["{ }", "Visual Query Builder", "Point and click to build complex queries. We handle nesting and fragments for you."],
   ["T", "Prebuilt Templates", "Start from battle-tested query patterns for posts, pages, and custom post types."],
@@ -46,7 +48,7 @@ function BrowserFrame({ src, alt, priority = false, wide = false }: { src: strin
   return (
     <div className={`${styles.browser} ${wide ? styles.wideBrowser : ""}`}>
       <div className={styles.browserBar}><span /><span /><span /><code>localhost:3000/wp-admin/toolkit</code></div>
-      <Image className={styles.browserImage} src={src} alt={alt} width={512} height={512} priority={priority} />
+      <Image className={styles.browserImage} src={`${basePath}${src}`} alt={alt} width={512} height={512} priority={priority} />
     </div>
   );
 }
