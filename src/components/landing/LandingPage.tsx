@@ -63,7 +63,7 @@ function Hero() {
         <p>Generate, preview, save, and export production-ready WPGraphQL queries without manually writing GraphQL code.</p>
         <div className={styles.buttonRow}><ButtonLink>Get Started Free</ButtonLink><ButtonLink secondary href="#features">View Live Demo</ButtonLink></div>
       </div>
-      <BrowserFrame src="/stitch/dashboard.png" alt="WP GraphQL Toolkit dashboard" priority wide />
+      <BrowserFrame src="/stitch/dashboard-layout.png" alt="WP GraphQL Toolkit dashboard" priority wide />
     </header>
   );
 }
@@ -114,13 +114,13 @@ function WorkflowSection() {
   );
 }
 
-function PriceCard({ name, price, items, featured = false }: { name: string; price: string; items: string[]; featured?: boolean }) {
-  return <article className={`${styles.priceCard} ${featured ? styles.featuredPrice : ""}`}><div className={styles.priceTitle}><div><h3>{name}</h3><p><strong>{price}</strong>{featured ? "/mo" : "/forever"}</p></div>{featured && <span>Most Popular</span>}</div><ul>{items.map(item => <li key={item}>+ {item}</li>)}</ul><ButtonLink secondary={!featured}>{featured ? "Get Pro Access" : "Start Building"}</ButtonLink></article>;
+function PriceCard({ name, price, items }: { name: string; price: string; items: string[] }) {
+  return <article className={styles.priceCard}><div className={styles.priceTitle}><div><h3>{name}</h3><p><strong>{price}</strong> while in development</p></div></div><ul>{items.map(item => <li key={item}>+ {item}</li>)}</ul><ButtonLink>Start Building</ButtonLink></article>;
 }
 
 function PricingSection() {
   return (
-    <section className={styles.section} id="pricing"><div className={styles.sectionHeading}><p className={styles.eyebrow}>Straightforward pricing</p><h2>Start free. Upgrade when you need more.</h2></div><div className={styles.pricingGrid}><PriceCard name="Free" price="$0" items={["Visual Query Builder", "Full Schema Explorer", "Basic Code Export", "Standard Templates"]} /><PriceCard name="Pro" price="$19" featured items={["Everything in Free", "AI-Powered Query Generator", "Advanced ACF & WPML Support", "Shared Team Query Libraries", "White-labeled Documentation"]} /></div></section>
+    <section className={styles.section} id="pricing"><div className={styles.sectionHeading}><p className={styles.eyebrow}>Free while we build</p><h2>Explore the toolkit at no cost.</h2></div><div className={styles.pricingGrid}><PriceCard name="Free" price="$0" items={["Visual Query Builder", "Full Schema Explorer", "Basic Code Export", "Standard Templates"]} /></div></section>
   );
 }
 
