@@ -27,7 +27,7 @@ const faqs = [
   ["Does it work with multisite?", "Yes. WP GraphQL Toolkit is compatible with WordPress Multisite installations, so you can manage queries across your network."],
 ];
 
-function ButtonLink({ children, secondary = false, href = "#pricing" }: { children: React.ReactNode; secondary?: boolean; href?: string }) {
+function ButtonLink({ children, secondary = false, href = "../../../download-plugin/headless-graphql-toolkit-1.1.4.zip" }: { children: React.ReactNode; secondary?: boolean; href?: string }) {
   return <Link className={secondary ? styles.secondaryButton : styles.primaryButton} href={href}>{children}</Link>;
 }
 
@@ -61,7 +61,7 @@ function Hero() {
         <p className={styles.eyebrow}>The visual workspace for WPGraphQL</p>
         <h1>Build WPGraphQL Queries Visually.<br /><span>Ship Headless WordPress Faster.</span></h1>
         <p>Generate, preview, save, and export production-ready WPGraphQL queries without manually writing GraphQL code.</p>
-        <div className={styles.buttonRow}><ButtonLink>Get Started Free</ButtonLink><ButtonLink secondary href="#features">View Live Demo</ButtonLink></div>
+        <div className={styles.buttonRow}><ButtonLink>Get Started Free</ButtonLink><ButtonLink secondary href="https://www.youtube.com/watch?v=R6rsmwmTAJc">View Demo Video</ButtonLink></div>
       </div>
       <BrowserFrame src="/stitch/dashboard-layout.png" alt="WP GraphQL Toolkit dashboard" priority wide />
     </header>
@@ -115,7 +115,7 @@ function WorkflowSection() {
 }
 
 function PriceCard({ name, price, items }: { name: string; price: string; items: string[] }) {
-  return <article className={styles.priceCard}><div className={styles.priceTitle}><div><h3>{name}</h3><p><strong>{price}</strong> while in development</p></div></div><ul>{items.map(item => <li key={item}>+ {item}</li>)}</ul><ButtonLink>Start Building</ButtonLink></article>;
+  return <article className={styles.priceCard}><div className={styles.priceTitle}><div><h3>{name}</h3><p><strong>{price}</strong> while in development</p></div></div><ul>{items.map(item => <li key={item}>+ {item}</li>)}</ul><ButtonLink>Download Plugin</ButtonLink></article>;
 }
 
 function PricingSection() {
