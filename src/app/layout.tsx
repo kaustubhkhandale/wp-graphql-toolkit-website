@@ -21,11 +21,21 @@ export const metadata: Metadata = {
   title: "WP GraphQL Toolkit | Build Headless WordPress Faster",
   description:
     "Build, preview, save, and export production-ready WPGraphQL queries visually.",
+  authors: [
+    {
+      name: "Kaustubh Khandale",
+      url: "https://github.com/kaustubhkhandale",
+    },
+  ],
+  creator: "Kaustubh Khandale",
+  publisher: "WP GraphQL Toolkit",
   openGraph: {
     title: "WP GraphQL Toolkit | Build Headless WordPress Faster",
     description:
       "Build, preview, save, and export production-ready WPGraphQL queries visually.",
-    type: "website",
+    type: "article",
+    publishedTime: "2026-06-10T07:01:39.000Z",
+    authors: ["Kaustubh Khandale"],
   },
   twitter: {
     card: "summary_large_image",
