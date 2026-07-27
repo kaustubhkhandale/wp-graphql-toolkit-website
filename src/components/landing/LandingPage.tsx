@@ -27,7 +27,7 @@ const faqs = [
   ["Does it work with multisite?", "Yes. WP GraphQL Toolkit is compatible with WordPress Multisite installations, so you can manage queries across your network."],
 ];
 
-function ButtonLink({ children, secondary = false, href = "../../../download-plugin/headless-graphql-toolkit-1.1.4.zip" }: { children: React.ReactNode; secondary?: boolean; href?: string }) {
+function ButtonLink({ children, secondary = false, href = "https://wordpress.org/plugins/kgraph-headless-toolkit/" }: { children: React.ReactNode; secondary?: boolean; href?: string }) {
   return <Link className={secondary ? styles.secondaryButton : styles.primaryButton} href={href}>{children}</Link>;
 }
 
